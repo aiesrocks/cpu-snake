@@ -84,6 +84,13 @@ the `.saver` in Finder → **Open** and dismiss the warning once.
 > is sufficient. You do **not** need the broader `xattr -cr …` (which clears
 > every extended attribute). The `com.apple.provenance` attribute that downloads
 > also carry is informational and does not block Gatekeeper.
+>
+> If you somehow still see a Gatekeeper error after `-dr com.apple.quarantine`,
+> fall back to the broader clear as a one-shot fix:
+>
+> ```bash
+> xattr -cr ~/Library/Screen\ Savers/CPUSnake.saver
+> ```
 
 Then open **System Settings → Screen Saver → Other → CPUSnake**.
 
