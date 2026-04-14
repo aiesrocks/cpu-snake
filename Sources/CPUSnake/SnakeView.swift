@@ -33,22 +33,20 @@ public final class SnakeView: ScreenSaverView {
 
     private func rebuildSnakes() {
         let grid = currentGrid()
-        let cpuColor = preferences.cpuColor
-        let gpuColor = preferences.gpuColor
         var built: [Snake] = []
         for i in 0..<cpuSampler.physicalCoreCount {
             let p = GridPoint(
                 x: Int.random(in: 0..<max(grid.width, 1)),
                 y: Int.random(in: 0..<max(grid.height, 1))
             )
-            built.append(Snake(head: p, color: cpuColor, kind: .cpu(coreIndex: i)))
+            built.append(Snake(head: p, kind: .cpu(coreIndex: i)))
         }
         if preferences.showGPU && gpuSampler.isAvailable {
             let p = GridPoint(
                 x: Int.random(in: 0..<max(grid.width, 1)),
                 y: Int.random(in: 0..<max(grid.height, 1))
             )
-            built.append(Snake(head: p, color: gpuColor, kind: .gpu))
+            built.append(Snake(head: p, kind: .gpu))
         }
         snakes = built
     }
@@ -58,16 +56,16 @@ public final class SnakeView: ScreenSaverView {
         let cpuUtil = cpuSampler.sample()
         let gpuUtil = gpuSampler.sample()
         let maxLen = max(1, preferences.maxLength)
-        for i in snakes.indices {
-            switch snakes[i].kind {
+        for snake in snakes {
+            switch snake.kind {
             case .cpu(let idx):
                 let u = idx < cpuUtil.count ? cpuUtil[idx] : 0
-                snakes[i].targetLength = max(1, Int((u * Double(maxLen)).rounded()))
+                snake.targetLength = max(1, Int((u * Double(maxLen)).rounded()))
             case .gpu:
                 let u = gpuUtil ?? 0
-                snakes[i].targetLength = max(1, Int((u * Double(maxLen)).rounded()))
+                snake.targetLength = max(1, Int((u * Double(maxLen)).rounded()))
             }
-            snakes[i].step(in: grid)
+            snake.step(in: grid)
         }
         setNeedsDisplay(bounds)
     }
@@ -76,8 +74,31 @@ public final class SnakeView: ScreenSaverView {
         preferences.backgroundColor.setFill()
         bounds.fill()
         let cell = max(1, preferences.cellSize)
+        let cpuColor = preferences.cpuColor
+        let gpuColor = preferences.gpuColor
         for snake in snakes {
-            snake.draw(cell: cell)
+            let base: NSColor = {
+                switch snake.kind {
+                case .cpu: return cpuColor
+                case .gpu: return gpuColor
+                }
+            }()
+            drawSnake(snake, baseColor: base, cell: cell)
+        }
+    }
+
+    private func drawSnake(_ snake: Snake, baseColor: NSColor, cell: CGFloat) {
+        let n = max(snake.cells.count, 1)
+        for (i, p) in snake.cells.enumerated() {
+            let alpha: CGFloat = i == 0 ? 1.0 : max(0.18, 1.0 - (CGFloat(i) / CGFloat(n)) * 0.85)
+            baseColor.withAlphaComponent(alpha).setFill()
+            let r = NSRect(
+                x: CGFloat(p.x) * cell,
+                y: CGFloat(p.y) * cell,
+                width: max(1, cell - 1),
+                height: max(1, cell - 1)
+            )
+            r.fill()
         }
     }
 

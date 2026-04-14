@@ -8,7 +8,7 @@ SRC="Sources/${NAME}"
 BUILD="build"
 BUNDLE="${BUILD}/${NAME}.saver"
 
-rm -rf "${BUILD}"
+rm -rf "${BUNDLE}"
 mkdir -p "${BUNDLE}/Contents/MacOS"
 mkdir -p "${BUNDLE}/Contents/Resources"
 

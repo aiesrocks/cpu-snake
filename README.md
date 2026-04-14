@@ -78,6 +78,31 @@ the `.saver` in Finder → **Open** and dismiss the warning once.
 
 Then open **System Settings → Screen Saver → Other → CPUSnake**.
 
+## Terminal version
+
+A CLI version of the same visualization, for running in any terminal instead of
+as a screensaver.
+
+```bash
+./build-cli.sh
+./build/cpu-snake
+```
+
+Ctrl-C to quit. The terminal window is resized live (`SIGWINCH`).
+
+### How it renders
+Each terminal character carries two stacked "pixels" using the Unicode upper
+half-block (`▀`): top half via foreground color, bottom half via background
+color. That doubles vertical resolution and keeps cells near-square. A 120×40
+terminal therefore yields a 120×80 snake grid.
+
+Requires a terminal with **24-bit truecolor** support (Terminal.app, iTerm2,
+Ghostty, Alacritty, Kitty, WezTerm — all fine). Check with `echo $COLORTERM`;
+if it says `truecolor` or `24bit`, you're set.
+
+### Options
+- `CPU_SNAKE_INTERVAL=0.5 ./build/cpu-snake` — step interval in seconds (default 1.0).
+
 ## Build from source
 
 Requires Xcode command-line tools (Swift 5.9+, Apple Silicon recommended).
