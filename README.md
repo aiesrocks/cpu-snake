@@ -6,6 +6,15 @@ blue snake represents the GPU. Snake length scales with utilization.
 
 ![CPUSnake in action](docs/screenshot.png)
 
+## Two ways to run
+
+| Mode | What it is | How to run |
+|---|---|---|
+| **Screensaver** | A `.saver` bundle installed into System Settings | See [Install (prebuilt)](#install-prebuilt) or [Build from source](#build-from-source) |
+| **Terminal app** | A CLI that renders into any truecolor terminal | See [Terminal version](#terminal-version) |
+
+Both share the same CPU/GPU samplers and snake logic; only the rendering differs.
+
 ## Design
 
 ### Visual model
@@ -89,6 +98,11 @@ as a screensaver.
 ```
 
 Ctrl-C to quit. The terminal window is resized live (`SIGWINCH`).
+
+> **Run it in a real terminal window** (Terminal.app, iTerm2, Ghostty, etc.).
+> The CLI draws via ANSI escape codes and the alternate screen buffer, so
+> running it through a captured/non-interactive shell (for example piped into
+> a file, or via an IDE's background runner) will produce no visible output.
 
 ### How it renders
 Each terminal character carries two stacked "pixels" using the Unicode upper
