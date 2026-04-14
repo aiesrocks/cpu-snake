@@ -71,6 +71,11 @@ The `xattr` step is required because the bundle is **ad-hoc signed** (no Apple
 Developer ID). Without it, Gatekeeper blocks loading. Alternatively, right-click
 the `.saver` in Finder → **Open** and dismiss the warning once.
 
+> Only `com.apple.quarantine` blocks loading, so `xattr -dr com.apple.quarantine …`
+> is sufficient. You do **not** need the broader `xattr -cr …` (which clears
+> every extended attribute). The `com.apple.provenance` attribute that downloads
+> also carry is informational and does not block Gatekeeper.
+
 Then open **System Settings → Screen Saver → Other → CPUSnake**.
 
 ## Build from source
