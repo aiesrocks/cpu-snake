@@ -4,6 +4,8 @@ macOS screensaver that visualizes CPU and GPU activity as random-walking snakes
 made of "cursor" cells. Each red snake represents one physical CPU core; one
 blue snake represents the GPU. Snake length scales with utilization.
 
+![CPUSnake in action](docs/screenshot.png)
+
 ## Design
 
 ### Visual model
